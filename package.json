@@ -8,6 +8,8 @@
     "lodash": "^4.17.15"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "build": "cd frontend && npm run build",
+    "watch": "cd frontend && npm run watch"
   }
 }

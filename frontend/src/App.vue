@@ -1,30 +1,11 @@
-<script>
-	export default {
-		data: function(){
-			return {
-				hello: 'world'
-			}
-		},
-		methods: {
-			where: function(){
-				return this.hello
-			}
-		}
-	}
+<script setup>
+	import Navbar from './components/Navbar.vue'
+
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
-  <h2>Hello {{hello}} {{where()}}</h2>
-    <router-view />
+	<Navbar msg="Vite + Vue" />
+	<router-view />
 </template>
 
 <style scoped>

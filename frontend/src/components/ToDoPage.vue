@@ -21,12 +21,34 @@ const todos = ref([])
 </script>
 
 <template>
-	<h1>ToDo Page</h1>
-	<ul >
-		<li v-for="todo in todos">
-			{{todo.name}}
-		</li>
-	</ul>
+	<div class="container">
+		<h1>ToDo Page</h1>
+		<ul id="todo-list">
+			<li class="list-heading">
+				<div class="row my-2">
+					<div class="col-sm-7">
+						Name
+					</div>
+					<div class="col-sm-3">
+						Tasks Left
+					</div>
+				</div>
+			</li>
+			<li v-for="todo in todos">
+				<div class="row my-2">
+					<div class="col-sm-7">
+						{{todo.name}}
+					</div>
+					<div class="col-sm-3">
+						3
+					</div>
+					<div class="col-sm-2">
+						<button class="btn btn-danger">Delete</button>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
 
 </template>
 

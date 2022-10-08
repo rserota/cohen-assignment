@@ -24,6 +24,7 @@ const getProgress = (todo)=>{
 	return { totalTasks, completedTasks }
 }
 const testTask = new Task('Test task', 'this is a test', Date.now(), 'High')
+// testTask.completed = true
 let todos = [
 	{id: 1, name: 'Cohen Interview Assignment', tasks: [testTask]},
 	{id: 2, name: 'Another todo', tasks: []},
@@ -46,6 +47,14 @@ app.get('/todos', (req, res) => {
 	})
 	res.send(todoNames);
 });
+
+app.delete('/todos/:listID', (req, res) => {
+	const listIndex = todos.findIndex((list)=>{
+		return list.id == req.params.listID
+	})
+	todos.splice(listIndex, 1)
+	res.status(204).send()
+})
 
 app.listen(PORT, () =>
 	console.log(`Raphael's app is listening on port ${PORT}!`)

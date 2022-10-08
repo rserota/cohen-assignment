@@ -18,6 +18,19 @@ defineProps({
 
 const count = ref(0)
 const todos = ref([])
+
+const deleteTodoList = async (listID)=>{
+	console.log('list id?', listID)
+	try {
+		await axios.delete(`/todos/${listID}`)
+		const updatedTodos = await axios.get('/todos')
+		console.log(updatedTodos)
+		todos.value = updatedTodos.data
+	}
+	catch(e){
+		console.log('oops')
+	}
+}
 </script>
 
 <template>
@@ -34,13 +47,13 @@ const todos = ref([])
 					</div>
 				</div>
 			</li>
-			<li v-for="todo in todos">
+			<li v-for="todo in todos" @click="deleteTodoList(todo.id)">
 				<div class="row my-2">
 					<div class="col-sm-7">
 						{{todo.name}}
 					</div>
 					<div class="col-sm-3">
-						3
+						{{todo.progress.totalTasks - todo.progress.completedTasks}}
 					</div>
 					<div class="col-sm-2">
 						<button class="btn btn-danger">Delete</button>

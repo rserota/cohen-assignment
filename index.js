@@ -1,4 +1,5 @@
 const express = require('express');
+const crypto = require('crypto')
 const app = express();
 
 app.use(express.json());
@@ -12,6 +13,14 @@ class Task {
 		this.dueDate = dueDate
 		this.priority = priority
 		this.completed = false
+	}
+}
+
+class ToDoList {
+	constructor(name){
+		this.name = name
+		this.id = crypto.randomUUID()
+		this.tasks = []
 	}
 }
 const getProgress = (todo)=>{
@@ -47,6 +56,12 @@ app.get('/todos', (req, res) => {
 	})
 	res.send(todoNames);
 });
+
+app.post('/todos', (req, res) => {
+	const newToDoList = new ToDoList(req.body.newToDoListName)
+	todos.push(newToDoList)
+	res.status(201).send(newToDoList)
+})
 
 app.delete('/todos/:listID', (req, res) => {
 	const listIndex = todos.findIndex((list)=>{

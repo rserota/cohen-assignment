@@ -24,7 +24,6 @@ class ToDoList {
 	}
 }
 const getProgress = (todo)=>{
-	console.log('todo? ', todo)
 	const totalTasks = todo.tasks.length
 	const completedTasks = todo.tasks.filter((task)=>{
 		return task.completed
@@ -33,7 +32,6 @@ const getProgress = (todo)=>{
 	return { totalTasks, completedTasks }
 }
 const testTask = new Task('Test task', 'this is a test', Date.now(), 'High')
-// testTask.completed = true
 let todos = [
 	{id: 1, name: 'Cohen Interview Assignment', tasks: [testTask]},
 	{id: 2, name: 'Another todo', tasks: []},
@@ -59,6 +57,7 @@ app.get('/todos', (req, res) => {
 
 app.post('/todos', (req, res) => {
 	const newToDoList = new ToDoList(req.body.newToDoListName)
+	console.log(req.body.newToDoListName, '??')
 	todos.push(newToDoList)
 	res.status(201).send(newToDoList)
 })

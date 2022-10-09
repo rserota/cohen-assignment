@@ -19,7 +19,6 @@ defineProps({
 })
 
 const deleteToDoList = async (listID)=>{
-	console.log('list id?', listID)
 	try {
 		await axios.delete(`/todos/${listID}`)
 		await getUpdatedToDos()
@@ -29,10 +28,34 @@ const deleteToDoList = async (listID)=>{
 	}
 }
 
+const validateListName = (newName, todos)=>{
+	const validationErrors = []
+	const currentNames = todos.map((todo)=>{
+		return todo.name
+	})
+	if ( currentNames.includes(newName) ) {
+		validationErrors.push("The list name must be unique.")
+	}
+	if ( newName === '' ) {
+		validationErrors.push("The list name can't be blank.")
+	}
+
+	return validationErrors
+}
+
 const createToDoList = async ()=>{
-	await axios.post(`/todos`, {newToDoListName: newToDoListName.value})
-	await getUpdatedToDos()
-	newToDoListName.value = ''
+	const validationErrors = validateListName(newToDoListName.value, todos.value)
+	if ( !validationErrors.length ) {
+		await axios.post(`/todos`, {newToDoListName: newToDoListName.value})
+		await getUpdatedToDos()
+		newToDoListName.value = ''
+	}
+	else {
+		for ( let error of validationErrors ) {
+			alert(error)
+		}
+
+	}
 }
 
 </script>
@@ -57,7 +80,7 @@ const createToDoList = async ()=>{
 			<li>
 				<form @submit.prevent="createToDoList">
 					<div class="row my-2">
-						<div class="col-sm-7"><input v-model="newToDoListName" class="form-control" placeholder="New Todo List"></div>
+						<div class="col-sm-7"><input v-model="newToDoListName" class="form-control" placeholder="New Todo List" autofocus></div>
 						<div class="col-sm-3"> </div>
 						<div class="col-sm-2"> <button class="btn btn-success">Create</button> </div>
 					</div>

@@ -1,4 +1,4 @@
-import { createWebHistory, createRouter } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import ToDoPage from "./components/ToDoPage.vue";
 import TaskListPage from "./components/TaskListPage.vue";
 
@@ -9,14 +9,14 @@ const routes = [
     component: ToDoPage,
   },
   {
-    path: "/task-list",
+    path: "/task-list/:todoID",
     name: "TaskList",
     component: TaskListPage,
   },
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
 });
 

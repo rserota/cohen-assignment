@@ -1,23 +1,19 @@
 <script setup>
-import { ref } from 'vue'
 
-defineProps({
-	msg: String
-})
 
-const count = ref(0)
 </script>
 
 <template>
-	<h1>To Do Today</h1>
-	<router-link to="/">Home</router-link>
-	<br>
-	<router-link to="/task-list">Task List</router-link>
+	<div id="navbar" class="py-2">
+		<h1><router-link to="/">To Do Today</router-link></h1>
+	</div>
 
 </template>
 
 <style scoped>
-.read-the-docs {
-	color: #888;
-}
+	#navbar {
+		background-color: #339;
+		font-size: 2.5rem;
+
+	}
 </style>

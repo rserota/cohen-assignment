@@ -4,7 +4,7 @@
 </script>
 
 <template>
-	<Navbar msg="Vite + Vue" />
+	<Navbar/>
 	<router-view />
 </template>
 

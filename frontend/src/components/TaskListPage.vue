@@ -1,19 +1,18 @@
 <script setup>
-import { ref } from 'vue'
+import { onMounted, computed } from 'vue'
+import { useRoute } from 'vue-router'
 
-defineProps({
-  msg: String
+console.log('task list')
+
+const route = useRoute()
+console.log(route.params, 'route')
+onMounted(() => {
+	console.log(route.params.todoID)
 })
-
-const count = ref(0)
 </script>
 
 <template>
-  <p >Task list</p>
 </template>
 
 <style scoped>
-.read-the-docs {
-  color: #888;
-}
 </style>

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
-
+console.log('to do')
 const todos = ref([])
 const newToDoListName = ref('')
 
@@ -58,11 +58,15 @@ const createToDoList = async ()=>{
 	}
 }
 
+const todoIsComplete = (todo)=>{
+	return todo.progress.totalTasks === todo.progress.completedTasks
+}
+
 </script>
 
 <template>
+	<div class="py-5"></div>
 	<div class="container">
-		<h1>ToDo Page</h1>
 		<ul id="todo-list">
 			<li class="list-heading">
 				<div class="row my-2">
@@ -70,11 +74,11 @@ const createToDoList = async ()=>{
 					<div class="col-sm-3"> Tasks Left </div>
 				</div>
 			</li>
-			<li v-for="todo in todos" @click="deleteToDoList(todo.id)">
+			<li v-for="todo in todos">
 				<div class="row my-2">
-					<div class="col-sm-7"> {{todo.name}} </div>
+					<div class="col-sm-7"><router-link :to="{name: 'TaskList', params: {todoID: todo.id}}"><span :class="{completed: todoIsComplete(todo)}">{{todo.name}}</span></router-link></div>
 					<div class="col-sm-3"> {{todo.progress.totalTasks - todo.progress.completedTasks}} </div>
-					<div class="col-sm-2"> <button class="btn btn-danger">Delete</button> </div>
+					<div class="col-sm-2"> <button @click="deleteToDoList(todo.id)" class="btn btn-danger">Delete</button> </div>
 				</div>
 			</li>
 			<li>
@@ -92,4 +96,8 @@ const createToDoList = async ()=>{
 </template>
 
 <style scoped>
+	.completed {
+		text-decoration: line-through;
+		font-style: italic;
+	}
 </style>

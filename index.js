@@ -55,6 +55,14 @@ app.get('/todos', (req, res) => {
 	res.send(todoNames);
 });
 
+app.get('/todos/:todoID', (req, res) => {
+	const todo = todos.find((t)=>{ return t.id == req.params.todoID })
+	if ( todo ) {
+		res.send(todo)
+	}
+	else { res.status(404).send({error:"Failed to find todo"}) }
+})
+
 app.post('/todos', (req, res) => {
 	const newToDoList = new ToDoList(req.body.newToDoListName)
 	console.log(req.body.newToDoListName, '??')

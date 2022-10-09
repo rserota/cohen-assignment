@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
-console.log('to do')
+
 const todos = ref([])
 const newToDoListName = ref('')
 
@@ -14,9 +14,6 @@ onMounted(async () => {
 	await getUpdatedToDos()
 })
 
-defineProps({
-	msg: String
-})
 
 const deleteToDoList = async (listID)=>{
 	try {
@@ -96,6 +93,9 @@ const todoIsComplete = (todo)=>{
 </template>
 
 <style scoped>
+	#todo-list {
+		list-style-type: none;
+	}
 	.completed {
 		text-decoration: line-through;
 		font-style: italic;

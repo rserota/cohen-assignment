@@ -6,11 +6,15 @@ Install dependencies
 
 ```npm i```
 
+Built the application
+
+```npm run build```
+
 Start the application 
 
 ```npm run start```
 
-Go to *http://localhost:3000/todos* to verify the application is working. 
+Go to *http://localhost:3000* to verify the application is working. 
 
 # Assignment
 

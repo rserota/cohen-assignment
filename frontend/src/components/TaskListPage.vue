@@ -9,11 +9,8 @@ const editingTask = ref({})
 const route = useRoute()
 
 const updateTask = async (task)=>{
-	console.log('update?', task)
 	const response = await axios.put(`/tasks/${task.id}`, task)
 	await getUpdatedTasks()
-	console.log(response)
-
 }
 
 const getUpdatedTasks = async ()=>{
@@ -26,9 +23,7 @@ const validateTask = (newTask, tasks, editing)=>{
 	const currentNames = tasks.map((task)=>{
 		return task.name
 	})
-	console.log('validate!', newTask)
 	if ( currentNames.includes(newTask.name) && !(newTask.name == newTask.oldName) ) {
-
 		validationErrors.push("The task name must be unique.")
 	}
 	if ( !newTask.name ) {
@@ -56,54 +51,44 @@ const createTask = async ()=>{
 		newTask.value = { priority: 'High' }
 	}
 	else {
-		for ( let error of validationErrors ) {
-			alert(error)
-		}
+		for ( let error of validationErrors ) { alert(error) }
 	}
 }
 
 const deleteTask = async (taskID)=>{
-	console.log(taskID)
 	const response = await axios.delete(`/tasks/${taskID}`)
 	await getUpdatedTasks()
-	console.log(response)
 }
 
 const saveTask = async (task)=>{
 	const validationErrors = validateTask(editingTask.value, todo.value.tasks, true)
 	if ( !validationErrors.length ) {
-		console.log('task? ', task)
-		// task.value = editingTask.value
 		const taskIndex = todo.value.tasks.indexOf(task)
-		console.log(taskIndex)
 		stopEditingTask(editingTask.value)
 		todo.value.tasks[taskIndex] = editingTask.value
 		await updateTask(editingTask.value)
 	}
 	else {
-		for ( let error of validationErrors ) {
-			alert(error)
-		}
+		for ( let error of validationErrors ) { alert(error) }
 	}
 }
 
 // just changes the UI so the task is editable
 const editTask = (task) => {
-	// first, set all tasks to read-only, so we only edit one task at a time
-	for ( let t of todo.value.tasks ) {
-		t.editing = false
+	if ( !task.completed ) {
+		// first, set all tasks to read-only, so we only edit one task at a time
+		for ( let t of todo.value.tasks ) { t.editing = false }
+		task.editing = true
+		editingTask.value = {...task, oldName: task.name}
 	}
-	task.editing = true
-	editingTask.value = {...task, oldName: task.name}
+	else { alert("You cannot edit a completed task.") }
 }
 
 // changes UI for a task back to read-only
 const stopEditingTask = (task) => { task.editing = false }
 
 onMounted( async () => {
-	try {
-		await getUpdatedTasks()
-	}
+	try { await getUpdatedTasks() }
 	catch(e){
 		console.log(e)
 		alert("Failed to fetch todo list")

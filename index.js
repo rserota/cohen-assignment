@@ -58,15 +58,12 @@ app.get('/todos', (req, res) => {
 
 app.get('/todos/:todoID', (req, res) => {
 	const todo = todos.find((t)=>{ return t.id == req.params.todoID })
-	if ( todo ) {
-		res.send(todo)
-	}
+	if ( todo ) { res.send(todo) }
 	else { res.status(404).send({error:"Failed to find todo"}) }
 })
 
 app.post('/todos', (req, res) => {
 	const newToDoList = new ToDoList(req.body.newToDoListName)
-	console.log(req.body.newToDoListName, '??')
 	todos.push(newToDoList)
 	res.status(201).send(newToDoList)
 })
@@ -80,12 +77,9 @@ app.delete('/todos/:todoID', (req, res) => {
 })
 
 app.post('/tasks', (req, res) => {
-	console.log('body? ', req.body)
-	console.log('...')
 	const newTask = new Task(req.body.name, req.body.description, req.body.dueDate, req.body.priority)
 	const parentList = todos.find((todo)=>{ return todo.id == req.body.todoID})
 	parentList.tasks.push(newTask)
-	console.log(newTask)
 	res.status(201).send(newTask)
 })
 
@@ -103,7 +97,6 @@ app.delete('/tasks/:taskID', (req, res) => {
 })
 
 app.put('/tasks/:taskID', (req, res) => {
-	console.log('update task', req.body)
 	for ( let todo of todos ) {
 		const taskIndex = todo.tasks.findIndex((task)=>{
 			return task.id === req.params.taskID

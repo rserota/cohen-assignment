@@ -31,7 +31,7 @@ const validateTaskName = (newName, todos)=>{
 const createTask = async ()=>{
 	const validationErrors = validateTaskName(newTask.value.name, todo.value.tasks)
 	if ( !validationErrors.length ) {
-		await axios.post('/tasks', newTask.value)
+		await axios.post('/tasks', {...newTask.value, todoID:route.params.todoID})
 		await getUpdatedTasks()
 		newTask.value = { priority: 'High' }
 	}
@@ -41,6 +41,13 @@ const createTask = async ()=>{
 		}
 
 	}
+}
+
+const deleteTask = async (taskID)=>{
+	console.log(taskID)
+	const response = await axios.delete(`/tasks/${taskID}`)
+	await getUpdatedTasks()
+	console.log(response)
 }
 
 onMounted( async () => {
@@ -63,9 +70,9 @@ onMounted( async () => {
 					<div class="col-sm-1"><input type="checkbox" :checked="task.completed"></div>
 					<div class="col-sm-3">{{task.name}}</div>
 					<div class="col-sm-2">{{task.priority}}</div>
-					<div class="col-sm-2">{{new Date(task.dueDate).toLocaleString()}}</div>
+					<div class="col-sm-2">{{task.dueDate}}</div>
 					<div class="col-sm-3">{{task.description}}</div>
-					<div class="col-sm-1"><button class="btn btn-danger">Delete</button></div>
+					<div class="col-sm-1"><button @click="deleteTask(task.id)" class="btn btn-danger">Delete</button></div>
 				</div>
 			</li>
 			<li>
@@ -80,8 +87,8 @@ onMounted( async () => {
 								<option value="Low">Low</option>
 							</select>
 						</div>
-						<div class="col-sm-2"><input type="date"></div>
-						<div class="col-sm-3"><textarea placeholder="New task description">{{newTask.description}}</textarea></div>
+						<div class="col-sm-2"><input v-model="newTask.dueDate" type="date"></div>
+						<div class="col-sm-3"><textarea v-model="newTask.description" placeholder="New task description"></textarea></div>
 						<div class="col-sm-1"><button class="btn btn-success">Create</button></div>
 					</div>
 				</form>

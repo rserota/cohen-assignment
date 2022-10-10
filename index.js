@@ -13,14 +13,15 @@ class Task {
 		this.dueDate = dueDate
 		this.priority = priority
 		this.completed = false
+		this.id = crypto.randomUUID()
 	}
 }
 
 class ToDoList {
 	constructor(name){
 		this.name = name
-		this.id = crypto.randomUUID()
 		this.tasks = []
+		this.id = crypto.randomUUID()
 	}
 }
 const getProgress = (todo)=>{
@@ -31,7 +32,7 @@ const getProgress = (todo)=>{
 	
 	return { totalTasks, completedTasks }
 }
-const testTask = new Task('Test task', 'this is a test', Date.now(), 'High')
+const testTask = new Task('Test task', 'this is a test', '2022-11-03', 'High')
 let todos = [
 	{id: 1, name: 'Cohen Interview Assignment', tasks: [testTask]},
 	{id: 2, name: 'Another todo', tasks: []},
@@ -70,11 +71,36 @@ app.post('/todos', (req, res) => {
 	res.status(201).send(newToDoList)
 })
 
-app.delete('/todos/:listID', (req, res) => {
-	const listIndex = todos.findIndex((list)=>{
-		return list.id == req.params.listID
+app.delete('/todos/:todoID', (req, res) => {
+	const listIndex = todos.findIndex((todo)=>{
+		return todo.id == req.params.todoID
 	})
 	todos.splice(listIndex, 1)
+	res.status(204).send()
+})
+
+app.post('/tasks', (req, res) => {
+	console.log('body? ', req.body)
+	console.log('...')
+	const newTask = new Task(req.body.name, req.body.description, req.body.dueDate, req.body.priority)
+	const parentList = todos.find((todo)=>{ return todo.id == req.body.todoID})
+	parentList.tasks.push(newTask)
+	console.log(newTask)
+	res.status(201).send(newTask)
+})
+
+app.delete('/tasks/:taskID', (req, res) => {
+	console.log(req.params.taskID)
+	for ( let todo of todos ) {
+		const taskIndex = todo.tasks.findIndex((task)=>{
+			return task.id === req.params.taskID
+		})
+		if ( taskIndex ) {
+			console.log('found it')
+			todo.tasks.splice(taskIndex, 1)
+			break
+		}
+	}
 	res.status(204).send()
 })
 

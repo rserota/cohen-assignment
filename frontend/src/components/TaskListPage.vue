@@ -4,17 +4,48 @@ import { useRoute } from 'vue-router'
 import axios from 'axios'
 
 const todo = ref({})
-const newTask = ref({
-	priority: 'High',
-})
-
+const newTask = ref({ priority: 'High' })
 const route = useRoute()
-console.log(route.params, 'route')
+
+const getUpdatedTasks = async ()=>{
+	const updatedTasks = await axios.get(`/todos/${route.params.todoID}`)
+	todo.value = updatedTasks.data
+}
+
+const validateTaskName = (newName, todos)=>{
+	const validationErrors = []
+	return validationErrors
+	const currentNames = todos.map((todo)=>{
+		return todo.name
+	})
+	if ( currentNames.includes(newName) ) {
+		validationErrors.push("The list name must be unique.")
+	}
+	if ( newName === '' ) {
+		validationErrors.push("The list name can't be blank.")
+	}
+
+	return validationErrors
+}
+
+const createTask = async ()=>{
+	const validationErrors = validateTaskName(newTask.value.name, todo.value.tasks)
+	if ( !validationErrors.length ) {
+		await axios.post('/tasks', newTask.value)
+		await getUpdatedTasks()
+		newTask.value = { priority: 'High' }
+	}
+	else {
+		for ( let error of validationErrors ) {
+			alert(error)
+		}
+
+	}
+}
+
 onMounted( async () => {
 	try {
-		const response = await axios.get(`/todos/${route.params.todoID}`)
-		console.log(response)
-		todo.value = response.data
+		await getUpdatedTasks()
 	}
 	catch(e){
 		console.log(e)
@@ -38,20 +69,22 @@ onMounted( async () => {
 				</div>
 			</li>
 			<li>
-				<div class="row my-2">
-					<div class="col-sm-1"></div>
-					<div class="col-sm-3"><input v-model="newTask.name" class="form-control" placeholder="New Task Name"></div>
-					<div class="col-sm-2">
-						<select v-model="newTask.priority">
-							<option value="High">High</option>
-							<option value="Medium">Medium</option>
-							<option value="Low">Low</option>
-						</select>
+				<form @submit.prevent="createTask">
+					<div class="row my-2">
+						<div class="col-sm-1"></div>
+						<div class="col-sm-3"><input v-model="newTask.name" class="form-control" placeholder="New Task Name"></div>
+						<div class="col-sm-2">
+							<select v-model="newTask.priority">
+								<option value="High">High</option>
+								<option value="Medium">Medium</option>
+								<option value="Low">Low</option>
+							</select>
+						</div>
+						<div class="col-sm-2"><input type="date"></div>
+						<div class="col-sm-3"><textarea placeholder="New task description">{{newTask.description}}</textarea></div>
+						<div class="col-sm-1"><button class="btn btn-success">Create</button></div>
 					</div>
-					<div class="col-sm-2"><input type="date"></div>
-					<div class="col-sm-3"><textarea placeholder="New task description">{{newTask.description}}</textarea></div>
-					<div class="col-sm-1"><button class="btn btn-success">Create</button></div>
-				</div>
+				</form>
 			</li>
 		</ul>
 	</div>

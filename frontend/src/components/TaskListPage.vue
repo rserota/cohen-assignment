@@ -9,7 +9,7 @@ const editingTask = ref({})
 const route = useRoute()
 
 const updateTask = async (task)=>{
-	console.log('update?')
+	console.log('update?', task)
 	const response = await axios.put(`/tasks/${task.id}`, task)
 	await getUpdatedTasks()
 	console.log(response)
@@ -21,24 +21,35 @@ const getUpdatedTasks = async ()=>{
 	todo.value = updatedTasks.data
 }
 
-const validateTaskName = (newName, todos)=>{
+const validateTask = (newTask, tasks, editing)=>{
 	const validationErrors = []
-	return validationErrors
-	const currentNames = todos.map((todo)=>{
-		return todo.name
+	const currentNames = tasks.map((task)=>{
+		return task.name
 	})
-	if ( currentNames.includes(newName) ) {
-		validationErrors.push("The list name must be unique.")
+	console.log('validate!', newTask)
+	if ( currentNames.includes(newTask.name) && !(newTask.name == newTask.oldName) ) {
+
+		validationErrors.push("The task name must be unique.")
 	}
-	if ( newName === '' ) {
-		validationErrors.push("The list name can't be blank.")
+	if ( !newTask.name ) {
+		validationErrors.push("The task name can't be blank.")
+	}
+
+	if ( !newTask.dueDate ) {
+		validationErrors.push("The task due date can't be blank.")
+	}
+	if ( !newTask.priority ) {
+		validationErrors.push("The task priority can't be blank.")
+	}
+	if ( !newTask.description ) {
+		validationErrors.push("The task description can't be blank.")
 	}
 
 	return validationErrors
 }
 
 const createTask = async ()=>{
-	const validationErrors = validateTaskName(newTask.value.name, todo.value.tasks)
+	const validationErrors = validateTask(newTask.value, todo.value.tasks, false)
 	if ( !validationErrors.length ) {
 		await axios.post('/tasks', {...newTask.value, todoID:route.params.todoID})
 		await getUpdatedTasks()
@@ -48,7 +59,6 @@ const createTask = async ()=>{
 		for ( let error of validationErrors ) {
 			alert(error)
 		}
-
 	}
 }
 
@@ -60,13 +70,21 @@ const deleteTask = async (taskID)=>{
 }
 
 const saveTask = async (task)=>{
-	console.log('task? ', task)
-	// task.value = editingTask.value
-	const taskIndex = todo.value.tasks.indexOf(task)
-	console.log(taskIndex)
-	stopEditingTask(editingTask.value)
-	todo.value.tasks[taskIndex] = editingTask.value
-	await updateTask(editingTask.value)
+	const validationErrors = validateTask(editingTask.value, todo.value.tasks, true)
+	if ( !validationErrors.length ) {
+		console.log('task? ', task)
+		// task.value = editingTask.value
+		const taskIndex = todo.value.tasks.indexOf(task)
+		console.log(taskIndex)
+		stopEditingTask(editingTask.value)
+		todo.value.tasks[taskIndex] = editingTask.value
+		await updateTask(editingTask.value)
+	}
+	else {
+		for ( let error of validationErrors ) {
+			alert(error)
+		}
+	}
 }
 
 // just changes the UI so the task is editable
@@ -76,7 +94,7 @@ const editTask = (task) => {
 		t.editing = false
 	}
 	task.editing = true
-	editingTask.value = {...task}
+	editingTask.value = {...task, oldName: task.name}
 }
 
 // changes UI for a task back to read-only

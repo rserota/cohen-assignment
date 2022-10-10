@@ -27,15 +27,10 @@ const deleteToDoList = async (listID)=>{
 
 const validateListName = (newName, todos)=>{
 	const validationErrors = []
-	const currentNames = todos.map((todo)=>{
-		return todo.name
-	})
-	if ( currentNames.includes(newName) ) {
-		validationErrors.push("The list name must be unique.")
-	}
-	if ( newName === '' ) {
-		validationErrors.push("The list name can't be blank.")
-	}
+	const currentNames = todos.map((todo)=>{ return todo.name })
+
+	if ( currentNames.includes(newName) ) { validationErrors.push("The list name must be unique.") }
+	if ( !newName ) { validationErrors.push("The list name can't be blank.") }
 
 	return validationErrors
 }

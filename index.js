@@ -103,6 +103,7 @@ app.delete('/tasks/:taskID', (req, res) => {
 })
 
 app.put('/tasks/:taskID', (req, res) => {
+	console.log('update task', req.body)
 	for ( let todo of todos ) {
 		const taskIndex = todo.tasks.findIndex((task)=>{
 			return task.id === req.params.taskID

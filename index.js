@@ -90,14 +90,25 @@ app.post('/tasks', (req, res) => {
 })
 
 app.delete('/tasks/:taskID', (req, res) => {
-	console.log(req.params.taskID)
 	for ( let todo of todos ) {
 		const taskIndex = todo.tasks.findIndex((task)=>{
 			return task.id === req.params.taskID
 		})
-		if ( taskIndex ) {
-			console.log('found it')
+		if ( taskIndex > -1 ) {
 			todo.tasks.splice(taskIndex, 1)
+			break
+		}
+	}
+	res.status(204).send()
+})
+
+app.put('/tasks/:taskID', (req, res) => {
+	for ( let todo of todos ) {
+		const taskIndex = todo.tasks.findIndex((task)=>{
+			return task.id === req.params.taskID
+		})
+		if ( taskIndex > -1 ) {
+			todo.tasks[taskIndex] = req.body
 			break
 		}
 	}

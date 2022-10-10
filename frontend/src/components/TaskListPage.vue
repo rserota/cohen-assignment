@@ -7,6 +7,14 @@ const todo = ref({})
 const newTask = ref({ priority: 'High' })
 const route = useRoute()
 
+const updateTask = async (task)=>{
+	console.log('update?')
+	const response = await axios.put(`/tasks/${task.id}`, task)
+	await getUpdatedTasks()
+	console.log(response)
+
+}
+
 const getUpdatedTasks = async ()=>{
 	const updatedTasks = await axios.get(`/todos/${route.params.todoID}`)
 	todo.value = updatedTasks.data
@@ -67,8 +75,8 @@ onMounted( async () => {
 		<ul id="task-list">
 			<li v-for="task in todo.tasks">
 				<div class="row my-2">
-					<div class="col-sm-1"><input type="checkbox" :checked="task.completed"></div>
-					<div class="col-sm-3">{{task.name}}</div>
+					<div class="col-sm-1"><input type="checkbox" @change="updateTask(task)" v-model="task.completed"></div>
+					<div class="col-sm-3"><span :class="{completed:task.completed}">{{task.name}}</span></div>
 					<div class="col-sm-2">{{task.priority}}</div>
 					<div class="col-sm-2">{{task.dueDate}}</div>
 					<div class="col-sm-3">{{task.description}}</div>

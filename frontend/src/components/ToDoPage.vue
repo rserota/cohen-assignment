@@ -96,8 +96,5 @@ const todoIsComplete = (todo)=>{
 	#todo-list {
 		list-style-type: none;
 	}
-	.completed {
-		text-decoration: line-through;
-		font-style: italic;
-	}
+
 </style>
